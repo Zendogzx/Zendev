@@ -1,10 +1,152 @@
  #!/usr/bin/python
 
+import os,sys,random,requests
+
+
+
+def get_latest_version_info():
+    try:
+        response = requests.get(VERSION_CHECK_URL)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestError as e:
+        print(f"Error checking for updates: {e}")
+        return None
+
+def download_new_version(download_url, filename):
+    try:
+        response = requests.get(download_url)
+        response.raise_for_status()
+        
+        directory = os.path.dirname(filename)
+        if directory and not os.path.exists(directory):
+            os.makedirs(directory)
+            
+        with open(filename, 'wb') as file:
+            file.write(response.content)
+    except Exception as e:
+        print(f"Error saat mengunduh: {e}")
+        
+
+
+try:
+    from colorama import init, Fore, Back, Style
+    init()
+    def color(text, fore=None, back=None):
+        color_map = {
+            (255,0,0): Fore.RED,
+            (0,255,0): Fore.GREEN, 
+            (0,0,255): Fore.BLUE,
+            (255,255,0): Fore.YELLOW,
+            (0,255,255): Fore.CYAN,
+            (255,0,255): Fore.MAGENTA
+        }
+        result = ""
+        if fore in color_map:
+            result += color_map[fore]
+        result += text
+        result += Style.RESET_ALL
+        return result
+
+    from pystyle import Anime as pyAnime
+    from pystyle import Colors as pyColors
+    from pystyle import Colorate as pyColorate
+    from pystyle import Center as pyCenter
+    from pystyle import System as pySystem
+    local_ip = requests.get('https://api.ipify.org').text
+    response = requests.get(f"https://ipinfo.io/{local_ip}/json")
+    data_jaringan = response.json()
+except Exception as e:
+    os.system("pip install colorama")
+    os.system("pip install requests")
+    os.system("pip install pystyle")
+    
+    from colorama import init, Fore, Back, Style
+    init()
+    def color(text, fore=None, back=None):
+        color_map = {
+            (255,0,0): Fore.RED,
+            (0,255,0): Fore.GREEN, 
+            (0,0,255): Fore.BLUE,
+            (255,255,0): Fore.YELLOW,
+            (0,255,255): Fore.CYAN,
+            (255,0,255): Fore.MAGENTA
+        }
+        result = ""
+        if fore in color_map:
+            result += color_map[fore]
+        result += text
+        result += Style.RESET_ALL
+        return result
+
+    from pystyle import Anime as pyAnime
+    from pystyle import Colors as pyColors
+    from pystyle import Colorate as pyColorate
+    from pystyle import Center as pyCenter
+    from pystyle import System as pySystem
+    
+
+
+banner = r"""
+
+
+     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⣤⣤⣶⠶⠶⠶⠶⠶⠶⠶⢖⣦⣤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡴⠞⠛⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠻⠶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⠞⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⠾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⠀⠀⣴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢷⣆⠀⠀⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⣠⡞⠁⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠈⠹⣦⡀⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⢀⣼⠋⠀⠀⠀⢀⣤⣾⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣷⣦⣀⠀⠀⠀⠈⢿⣄⠀⠀⠀⠀⠀
+     ⠀⠀⠀⢀⡾⠁⠀⣠⡾⢁⣾⡿⡋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣆⠹⣦⠀⠀⢻⣆⠀⠀⠀⠀
+     ⠀⠀⢀⡾⠁⢀⢰⣿⠃⠾⢋⡔⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⣿⠀⢹⣿⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡌⠻⠆⢿⣧⢀⠀⢻⣆⠀⠀⠀
+     ⠀⠀⣾⠁⢠⡆⢸⡟⣠⣶⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢷⣦⡸⣿⠀⣆⠀⢿⡄⠀⠀
+     ⠀⢸⡇⠀⣽⡇⢸⣿⠟⢡⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣉⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢤⠙⢿⣿⠀⣿⡀⠘⣿⠀⠀
+     ⡀⣿⠁⠀⣿⡇⠘⣡⣾⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⣦⡙⠀⣿⡇⠀⢻⡇⠀
+     ⢸⡟⠀⡄⢻⣧⣾⡿⢋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣴⣿⠉⡄⢸⣿⠀
+     ⢾⡇⢰⣧⠸⣿⡏⢠⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⠀⠓⢶⠶⠀⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣆⠙⣿⡟⢰⡧⠀⣿⠀
+     ⣸⡇⠰⣿⡆⠹⣠⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⣤⣤⣶⣿⡏⠀⠠⢺⠢⠀⠀⣿⣷⣤⣄⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣧⠸⠁⣾⡇⠀⣿⠀
+     ⣿⡇⠀⢻⣷⠀⣿⡿⠰⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⡅⠀⠀⢸⡄⠀⠀⣿⣿⣿⣿⣿⣿⣶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⡆⣰⣿⠁⠀⣿⠀
+     ⢸⣧⠀⡈⢿⣷⣿⠃⣰⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⡇⠀⠀⣿⣇⠀⢀⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⣸⡀⢿⣧⣿⠃⡀⢸⣿⠀
+     ⠀⣿⡀⢷⣄⠹⣿⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⣿⣿⠀⣼⣿⣿⣿⣿⣿⣿⣿⡯⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇⢸⡟⢁⣴⠇⣼⡇⠀
+     ⠀⢸⡇⠘⣿⣷⡈⢰⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣄⣿⣿⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⢰⣿⡧⠈⣴⣿⠏⢠⣿⠀⠀
+     ⠀⠀⢿⡄⠘⢿⣿⣦⣿⣯⠘⣆⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀⠀⡎⢸⣿⣣⣾⡿⠏⠀⣾⠇⠀⠀
+     ⠀⠀⠈⢷⡀⢦⣌⠛⠿⣿⡀⢿⣆⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⢀⣿⡁⣼⡿⠟⣉⣴⠂⣼⠏⠀⠀⠀
+     ⠀⠀⠀⠈⢷⡈⠻⣿⣶⣤⡁⠸⣿⣆⠡⡀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⢀⣾⡟⠀⣡⣴⣾⡿⠁⣴⠏⠀⠀⠀⠀
+    ⠀ ⠀⠀⠀⠈⢿⣄⠈⢙⠿⢿⣷⣼⣿⣦⠹⣶⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡄⢡⣾⣿⣶⣿⠿⢛⠉⢀⣾⠏⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⠹⣧⡀⠳⣦⣌⣉⣙⠛⠃⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠐⠛⠋⣉⣉⣤⡶⠁⣰⡿⠁⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠙⠛⠿⠿⠿⠿⠟⠛⠛⣹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣟⠙⠟⠛⠿⠿⠿⠿⠟⠛⠁⣠⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⢶⣄⠙⠶⣦⣤⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣦⣤⡶⠖⣁⣴⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣶⣄⡉⠉⠉⠉⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠉⠉⠉⠉⣡⣴⡾⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠷⢦⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣠⣴⠶⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠛⠿⠿⠿⠿⠿⠿⠿⠿⠿⠟⠛⠋⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+
+
+
+           ███████╗███████╗███╗░░██╗██╗████████╗██╗░░██╗
+           ╚════██║██╔════╝████╗░██║██║╚══██╔══╝██║░░██║
+           ░░███╔═╝█████╗░░██╔██╗██║██║░░░██║░░░███████║
+           ██╔══╝░░██╔══╝░░██║╚████║██║░░░██║░░░██╔══██║
+           ███████╗███████╗██║░╚███║██║░░░██║░░░██║░░██║
+           ╚══════╝╚══════╝╚═╝░░╚══╝╚═╝░░░╚═╝░░░╚═╝░░╚═╝
+  
+                                                                       
+                     𝙲𝙰𝚁 𝙿𝙰𝚁𝙺𝙸𝙽𝙶 𝙼𝚄𝙻𝚃𝙸𝙿𝙻𝙰𝚈𝙴𝚁 𝟷
+                      𝙿𝚁𝙴𝚂𝚂 𝙴𝙽𝚃𝙴𝚁 𝚃𝙾 𝙲𝙾𝙽𝚃𝙸𝙽𝚄𝙴                                 
+"""[1:]
+
+
+pyAnime.Fade(pyCenter.Center(banner), pyColors.red_to_yellow, pyColorate.Vertical, enter=True)
+
+
+pySystem.Clear()
+
+
+
 import random
-import urllib.parse
 import requests
 from time import sleep
 import os, signal, sys
+from pyfiglet import figlet_format
 from rich.console import Console
 from rich.prompt import Prompt, IntPrompt
 from rich.text import Text
@@ -13,6 +155,9 @@ import pystyle
 from pystyle import Colors, Colorate
 
 from zenbruh import Zendev
+
+__CHANNEL_USERNAME__ = "ZENXCPM"
+__GROUP_USERNAME__   = "ZENXCHAT"
 
 def signal_handler(sig, frame):
     print("\n Bye Bye...")
@@ -35,28 +180,31 @@ def gradient_text(text, colors):
         colorful_text.append("\n")
     return colorful_text
 
-
 def banner(console):
     os.system('cls' if os.name == 'nt' else 'clear')
-    brand_name = "Tool version is 0.3"
-    
-    text = Text(brand_name, style="bold black")
-    
-    console.print(text)
-    console.print("[bold white] ============================================================[/bold white]")
-    console.print("[bold yellow]      𝗣𝗟𝗘𝗔𝗦𝗘 𝗟𝗢𝗚 𝗢𝗨𝗧 𝗙𝗥𝗢𝗠 𝗖𝗣𝗠 𝗕𝗘𝗙𝗢𝗥𝗘 𝗨𝗦𝗜𝗡𝗚 𝗧𝗛𝗜𝗦 𝗧𝗢𝗢𝗟[/bold yellow]")
-    console.print("[bold red]      𝗦𝗛𝗔𝗥𝗜𝗡𝗚 𝗧𝗛𝗘 𝗔𝗖𝗖𝗘𝗦 𝗞𝗘𝗬 𝗜𝗦 𝗡𝗢𝗧 𝗔𝗟𝗟𝗢𝗪𝗘𝗗[/bold red]")
-    console.print("[bold white] ============================================================[/bold white]")  
-    
+    brand_name = figlet_format('ZENXCPM', font='bloody')
+    colors = [
+        "rgb(255,0,0)", "rgb(255,69,0)", "rgb(255,140,0)", "rgb(255,215,0)", "rgb(173,255,47)", 
+        "rgb(0,255,0)", "rgb(0,255,255)", "rgb(0,191,255)", "rgb(0,0,255)", "rgb(139,0,255)",
+        "rgb(255,0,255)"
+    ]
+    colorful_text = gradient_text(brand_name, colors)
+    console.print(colorful_text)
+    print(Colorate.Horizontal(Colors.rainbow, '=================================================================='))
+    print(Colorate.Horizontal(Colors.rainbow, '\t         𝐏𝐋𝐄𝐀𝐒𝐄 𝐋𝐎𝐆𝐎𝐔𝐓 𝐅𝐑𝐎𝐌 𝐂𝐏𝐌 𝐁𝐄𝐅𝐎𝐑𝐄 𝐔𝐒𝐈𝐍𝐆 𝐓𝐇𝐈𝐒 𝐓𝐎𝐎𝐋'))
+    print(Colorate.Horizontal(Colors.rainbow, '    𝐒𝐇𝐀𝐑𝐈𝐍𝐆 𝐓𝐇𝐄 𝐀𝐂𝐂𝐄𝐒𝐒 𝐊𝐄𝐘 𝐈𝐒 𝐍𝐎𝐓 𝐀𝐋𝐋𝐎𝐖𝐄𝐃 𝐀𝐍𝐃 𝐖𝐈𝐋𝐋 𝐁𝐄 𝐁𝐋𝐎𝐂𝐊𝐄𝐃'))
+    print(Colorate.Horizontal(Colors.rainbow, '      𝐂𝐎𝐍𝐓𝐀𝐂𝐓 𝐌𝐄 𝐓𝐎 𝐁𝐔𝐘 𝐔𝐍𝐋𝐈𝐌𝐈𝐓𝐄𝐃 𝐁𝐀𝐋𝐀𝐍𝐂𝐄 𝐓𝐆 @senitbruh ')) 
+    print(Colorate.Horizontal(Colors.rainbow, f' ‌                𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦: @{__CHANNEL_USERNAME__} 𝐎𝐫 @{__GROUP_USERNAME__}'))
+    print(Colorate.Horizontal(Colors.rainbow, '=================================================================='))
+
 def load_player_data(cpm):
     response = cpm.get_player_data()
-    
     if response.get('ok'):
         data = response.get('data')
 
         if all(key in data for key in ['floats', 'localID', 'money', 'coin', "integers"]):
             
-            console.print("[bold][red]========[/red][ ᴘʟᴀʏᴇʀ ᴅᴇᴛᴀɪʟꜱ ][red]========[/red][/bold]")
+            console.print("[bold][red]========[/red][ PLAYER DETAILS ][red]========[/red][/bold]")
             
             console.print(f"[bold white]   >> Name        : {data.get('Name', 'UNDEFINED')}[/bold white]")
             console.print(f"[bold white]   >> LocalID     : {data.get('localID', 'UNDEFINED')}[/bold white]")
@@ -83,7 +231,7 @@ def load_key_data(cpm):
 
     data = cpm.get_key_data()
     
-    console.print("[bold][red]========[/red][ 𝘼𝘾𝘾𝙀𝙎𝙎 𝙆𝙀𝙔 𝘿𝙀𝙏𝘼𝙄𝙇𝙎 ][red]========[/red][/bold]")
+    console.print("[bold][red]========[/red][ ACCESS KEY DETAILS ][red]========[/red][/bold]")
     
     console.print(f"[bold white]   >> Access Key  [/bold white]: [black]{data.get('access_key')}[/black]")
     
@@ -103,9 +251,9 @@ def prompt_valid_value(content, tag, password=False):
 def load_client_details():
     response = requests.get("http://ip-api.com/json")
     data = response.json()
-    console.print("[bold red] =============[bold white][ 𝙇𝙊𝘾𝘼𝙏𝙄𝙊𝙉 ][/bold white]=============[/bold red]")
+    console.print("[bold red] =============[bold white][ LOCATION ][/bold white]=============[/bold red]")
     console.print(f"[bold white]    >> Country    : {data.get('country')} {data.get('zip')}[/bold white]")
-    console.print("[bold red] ===============[bold white][ ＭＥＮＵ ][/bold white]===========[/bold red]")
+    console.print("[bold red] ===============[bold white][ MENU ][/bold white]===========[/bold red]")
 
 def interpolate_color(start_color, end_color, fraction):
     start_rgb = tuple(int(start_color[i:i+2], 16) for i in (1, 3, 5))
@@ -162,52 +310,52 @@ if __name__ == "__main__":
             load_key_data(cpm)
             load_client_details()
             choices = ["00", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",]
-            console.print("[bold yellow][bold white](01)[/bold white]: Increase Money           [bold red]1.5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](02)[/bold white]: Increase Coins           [bold red]1.5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](03)[/bold white]: King Rank                [bold red]8K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](04)[/bold white]: Change ID                [bold red]4.5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](05)[/bold white]: Change Name              [bold red]100[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](06)[/bold white]: Change Name (Rainbow)    [bold red]100[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](07)[/bold white]: Number Plates            [bold red]2K[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](01)[/bold white]: Increase Money           [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](02)[/bold white]: Increase Coins           [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](03)[/bold white]: King Rank                [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](04)[/bold white]: Change ID                [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](05)[/bold white]: Change Name              [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](06)[/bold white]: Change Name (Rainbow)    [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](07)[/bold white]: Number Plates            [bold red]99[/bold red][/bold yellow]")
             console.print("[bold yellow][bold white](08)[/bold white]: Account Delete           [bold red]Free[/bold red][/bold yellow]")
             console.print("[bold yellow][bold white](09)[/bold white]: Account Register         [bold red]Free[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](10)[/bold white]: Delete Friends           [bold red]500[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](11)[/bold white]: Unlock Paid Cars         [bold red]5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](12)[/bold white]: Unlock All Cars          [bold red]6K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](13)[/bold white]: Unlock All Cars Siren    [bold red]3.5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](14)[/bold white]: Unlock W16 Engine        [bold red]4K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](15)[/bold white]: Unlock All Horns         [bold red]3K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](16)[/bold white]: Unlock Disable Damage    [bold red]3K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](17)[/bold white]: Unlock Unlimited Fuel    [bold red]3K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](18)[/bold white]: Unlock Home 3            [bold red]4K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](19)[/bold white]: Unlock Smoke             [bold red]4K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](20)[/bold white]: Unlock Wheels            [bold red]4K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](21)[/bold white]: Unlock Animations        [bold red]2K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](22)[/bold white]: Unlock Equipaments M     [bold red]3K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](23)[/bold white]: Unlock Equipaments F     [bold red]3K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](24)[/bold white]: Change Race Wins         [bold red]1K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](25)[/bold white]: Change Race Loses        [bold red]1K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](26)[/bold white]: Clone Account            [bold red]7K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](27)[/bold white]: Custom HP                [bold red]2.5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](28)[/bold white]: Custom Angle             [bold red]1.5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](29)[/bold white]: Custom Tire burner       [bold red]1.5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](30)[/bold white]: Custom Car Millage       [bold red]1.5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](31)[/bold white]: Custom Car Brake         [bold red]2K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](32)[/bold white]: Remove Rear Bumper       [bold red]2K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](33)[/bold white]: Remove Front Bumper      [bold red]2K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](34)[/bold white]: Change Account Password  [bold red]2K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](35)[/bold white]: Change Account Email     [bold red]2K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](36)[/bold white]: Custom Spoiler           [bold red]10K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](37)[/bold white]: Custom BodyKit           [bold red]10K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](38)[/bold white]: Unlock Premium Wheels    [bold red]4.5K[/bold red][/bold yellow]")
-            console.print("[bold yellow][bold white](39)[/bold white]: Unlock Toyota Crown      [bold red]2K[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](10)[/bold white]: Delete Friends           [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](11)[/bold white]: Unlock Paid Cars         [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](12)[/bold white]: Unlock All Cars          [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](13)[/bold white]: Unlock All Cars Siren    [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](14)[/bold white]: Unlock W16 Engine        [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](15)[/bold white]: Unlock All Horns         [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](16)[/bold white]: Unlock Disable Damage    [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](17)[/bold white]: Unlock Unlimited Fuel    [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](18)[/bold white]: Unlock Home 3            [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](19)[/bold white]: Unlock Smoke             [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](20)[/bold white]: Unlock Wheels            [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](21)[/bold white]: Unlock Animations        [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](22)[/bold white]: Unlock Equipaments M     [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](23)[/bold white]: Unlock Equipaments F     [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](24)[/bold white]: Change Race Wins         [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](25)[/bold white]: Change Race Loses        [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](26)[/bold white]: Clone Account            [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](27)[/bold white]: Custom HP                [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](28)[/bold white]: Custom Angle             [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](29)[/bold white]: Custom Tire burner       [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](30)[/bold white]: Custom Car Millage       [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](31)[/bold white]: Custom Car Brake         [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](32)[/bold white]: Remove Rear Bumper       [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](33)[/bold white]: Remove Front Bumper      [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](34)[/bold white]: Change Account Password  [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](35)[/bold white]: Change Account Email     [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](36)[/bold white]: Custom Spoiler           [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](37)[/bold white]: Custom BodyKit           [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](38)[/bold white]: Unlock Premium Wheels    [bold red]99[/bold red][/bold yellow]")
+            console.print("[bold yellow][bold white](39)[/bold white]: Unlock Toyota Crown      [bold red]99[/bold red][/bold yellow]")
             console.print("[bold yellow][bold white](0) [/bold white]: Exit From Tool [/bold yellow]")
             
-            console.print("[bold red]===============[bold white][ 𝐂𝐏𝐌 ][/bold white]===============[/bold red]")
+            console.print("[bold red]===============[bold white][ SERVICE ][/bold white]===============[/bold red]")
             
             service = IntPrompt.ask(f"[bold][?] Select a Service [red][1-{choices[-1]} or 0][/red][/bold]", choices=choices, show_choices=False)
             
-            console.print("[bold red]===============[bold white][ 𝐂𝐏𝐌 ][/bold white]===============[/bold red]")
+            console.print("[bold red]===============[bold white][ PROCESSING, PLS WAIT! ][/bold white]===============[/bold red]")
             
             if service == 0: # Exit
                 console.print("[bold white] Thank You for using my tool[/bold white]")
