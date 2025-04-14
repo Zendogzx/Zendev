@@ -363,7 +363,7 @@ if __name__ == "__main__":
                 console.print("[bold yellow][bold white][?][/bold white] Insert how much money do you want[/bold yellow]")
                 amount = IntPrompt.ask("[?] Amount")
                 console.print("[%] Saving your data: ", end=None)
-                if amount > 0 and amount <= 500000000:
+                if amount > 0 and amount <= 999999999:
                     if cpm.set_player_money(amount):
                         console.print("[bold green]SUCCESSFUL (✔)[/bold green]")
                         console.print("[bold green]======================================[/bold green]")
@@ -384,7 +384,7 @@ if __name__ == "__main__":
                 console.print("[bold yellow][bold white][?][/bold white] Insert how much coins do you want[/bold yellow]")
                 amount = IntPrompt.ask("[?] Amount")
                 print("[ % ] Saving your data: ", end="")
-                if amount > 0 and amount <= 500000:
+                if amount > 0 and amount <= 999999999:
                     if cpm.set_player_coins(amount):
                         console.print("[bold green]SUCCESSFUL (✔)[/bold green]")
                         console.print("[bold green]======================================[/bold green]")
